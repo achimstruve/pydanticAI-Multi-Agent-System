@@ -4,18 +4,21 @@ import json
 import os
 from src.agents.director_agent.director_agent import DirectorAgent
 
-# Example of using the main agent to delegate a task
 async def main():
-    # Simulate a query that would require delegation
+    # Define the initialuser message
     usr_msg = "What is the secret number and the secret word?"
+
+    # First response from the main agent
     print(f"Enter your message: {usr_msg}")
     result = await DirectorAgent.run(usr_msg)
     print(f"Result: {result.data.result}")
+    
+    # Create a loop to continue the conversation
     while usr_msg != "stop":
         usr_msg = input("Enter your message: ")
         result = await DirectorAgent.run(usr_msg, message_history=result.all_messages())
         print(f"Result: {result.data.result}")
 
-# Run our example
+# Run the main function
 import asyncio
 asyncio.run(main())

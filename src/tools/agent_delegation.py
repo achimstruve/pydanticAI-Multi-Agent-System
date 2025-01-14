@@ -9,11 +9,10 @@ async def delegate_task_logic(
     agent_registry: AgentRegistry
 ) -> TaskResult:
     """
-    This function implements the shared logic for delegating a task.
+    This tool delegates a task to an agent stored in the agent_registry.
     """
-    print(f"\nRunning delegate_task_logic with task_description: \n{task_description}\n to delegate to: {preferred_agent}")
+    print(f"\nDelegating task:'{task_description}'\n -> to agent: {preferred_agent}") 
     try:
-        # Assume you have a global agent_registry or pass it in explicitly
         if preferred_agent in agent_registry.get_all_agents():
             active_agent = agent_registry.get_agent(preferred_agent)
             result_from_handler = await active_agent.run(task_description)
