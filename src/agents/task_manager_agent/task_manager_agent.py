@@ -4,6 +4,7 @@ from .system_prompt import system_prompt
 import json
 from src.utils import TaskResult
 from src.utils import AgentRegistry
+from src.tools.agent_delegation import delegate_task_logic
 from src.agents.secret_number_agent.secret_number_agent import SecretNumberAgent
 from src.agents.secret_word_agent.secret_word_agent import SecretWordAgent
 
@@ -22,20 +23,16 @@ agent_registry.register_agent(SecretWordAgent)
 
 # Define a tool on the main agent that can delegate tasks to the secret_knower_agent
 @TaskManagerAgent.tool
-async def delegate_task(ctx: RunContext[Dict[str, str]], task_description: str, preferred_agent: str) -> TaskResult:
+async def delegate_task(
+    ctx: RunContext[Dict[str, str]],
+    task_description: str,
+    preferred_agent: str
+) -> TaskResult:
     """
     This tool delegates a task based on metadata from a stored registry.
     """
-    print(f"\n{TaskManagerAgent.name} is using the delegate_task tool with task_description: \n{task_description} \n to delegate to: {preferred_agent}")
-    try:
-        if preferred_agent in agent_registry.get_all_agents():
-            active_agent = agent_registry.get_agent(preferred_agent)
-            result_from_handler = await active_agent.run(task_description)
-            return result_from_handler
-        else:
-            return f"Agent {preferred_agent} not found in registry."
-    except Exception as e:
-        return f"Error loading or using agent: {str(e)}"
+    return await delegate_task_logic(ctx, task_description, preferred_agent, agent_registry)
+
 
 
 @TaskManagerAgent.tool

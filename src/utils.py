@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Dict
+from typing import Dict, List
 from pydantic_ai import Agent
 
 # Define a simple model for the result of the task delegation
@@ -20,3 +20,7 @@ class AgentRegistry:
     
     def get_all_agents(self) -> Dict[str, Agent]:
         return self.agents
+    
+    def get_agent_names(self) -> List[str]:
+        return list(self.agents.keys())
+
