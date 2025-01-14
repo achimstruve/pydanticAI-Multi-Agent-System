@@ -1,5 +1,5 @@
 from typing import Dict
-from pydantic_ai import RunContext, ModelRetry, Agent
+from pydantic_ai import RunContext, ModelRetry
 from src.utils import TaskResult, AgentRegistry
 
 async def delegate_task_logic(
