@@ -1,24 +1,19 @@
-from pydantic_ai import RunContext, Agent
+from pydantic_ai import RunContext
 from typing import Any, Dict
 from .system_prompt import system_prompt
-import json
+
+from src.agents.multiagent import MultiAgent
 from src.utils import TaskResult
 from src.tools.agent_delegation import delegate_task_logic
 from src.tools.planning import planning_logic
-from src.utils import initialize_delegation_agents
-from src.agents.secret_number_agent.secret_number_agent import SecretNumberAgent
-from src.agents.secret_word_agent.secret_word_agent import SecretWordAgent
 
 # Define the main agent
-TaskManagerAgent = Agent(
+TaskManagerAgent = MultiAgent(
     name="task_manager_agent",
     model="openai:gpt-4o",
     system_prompt=system_prompt,
     result_type=TaskResult
 )
-
-# initialize the delegation agents
-agent_registry = initialize_delegation_agents([SecretNumberAgent, SecretWordAgent])
 
 # add the delegate_task tool to the task manager agent
 @TaskManagerAgent.tool
@@ -27,7 +22,7 @@ async def delegate_task(
     task_description: str,
     preferred_agent: str
 ) -> TaskResult:
-    return await delegate_task_logic(ctx, task_description, preferred_agent, agent_registry)
+    return await delegate_task_logic(TaskManagerAgent, ctx, task_description, preferred_agent)
 
 # add the planning tool to the task manager agent
 @TaskManagerAgent.tool

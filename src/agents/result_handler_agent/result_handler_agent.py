@@ -1,7 +1,7 @@
-from pydantic_ai import Agent
+from src.agents.multiagent import MultiAgent
 from .system_prompt import system_prompt
 
-ResultHandlerAgent = Agent(
+ResultHandlerAgent = MultiAgent(
     name="result_handler_agent",
     model="openai:gpt-4o",
     system_prompt=system_prompt,

@@ -40,3 +40,11 @@ def initialize_delegation_agents(agents: List[Agent]) -> AgentRegistry:
         agent_registry.register_agent(agent)
     
     return agent_registry
+
+def initialize_agent_hierarchy(agent_hierarchy):
+    """
+    Initialize the agent hierarchy.
+    """
+    for agent in agent_hierarchy:
+        if isinstance(agent, list):
+            agent[0].add_sub_agent(agent[1])
